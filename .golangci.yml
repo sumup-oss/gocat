@@ -1,0 +1,71 @@
+run:
+  tests: false
+  skip-dirs:
+    # NOTE: Ignore auto-generated files
+    - clients
+    - vendor
+
+  # NOTE: Verify `go.{mod,sum}` is up-to-date by attempting to download dependencies
+  # if anything is missing
+  modules-download-mode: readonly
+
+output:
+  format: colored-line-number
+  print-issued-lines: true
+  print-linter-name: true
+
+linters-settings:
+  errcheck:
+    # report about not checking of errors in type assetions: `a := b.(MyStruct)`;
+    # default is false: such cases aren't reported by default.
+    check-type-assertions: false
+
+  # print linter name in the end of issue text, default is true
+  govet:
+    check-shadowing: true
+  gocyclo:
+    # NOTE: Too-low cyclomatic complexity value
+    # results into worse code design and readability.
+    min-complexity: 25
+  maligned:
+    suggest-new: true
+  dupl:
+    threshold: 100
+  goconst:
+    min-len: 2
+    min-occurrences: 2
+  depguard:
+    list-type: blacklist
+    packages:
+      # logging is allowed only by logutils.Log, logrus
+      # is allowed to use only in logutils package
+      - github.com/sirupsen/logrus
+      # NOTE: Be very, very wary not to use GPL3 software as library
+      - github.com/golangci/golangci-lint
+  misspell:
+    locale: US
+  lll:
+    line-length: 120
+  goimports:
+    local-prefixes: github.com/sumup/gocat
+  gocritic:
+    enabled-tags:
+      - performance
+
+linters:
+  enable-all: true
+  disable:
+    # NOTE: "effective" golang style is full of arguable practices.
+    # We don't need that and besides gofmt does the required minimum of style modifications.
+    - golint
+    # NOTE: Too much false positives
+    - unparam
+    # NOTE: It's a great linter, but gets in the way too often by not being customizable.
+    - gochecknoglobals
+    - depguard
+    - dupl
+issues:
+  exclude-rules:
+    - text: "weak cryptographic primitive"
+      linters:
+        - gosec
