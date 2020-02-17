@@ -18,7 +18,7 @@ import (
 	"net"
 	"time"
 
-	"github.com/sumup/gocat/internal/relay"
+	"github.com/sumup-oss/gocat/internal/relay"
 )
 
 type TCPClient struct {

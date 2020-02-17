@@ -1,4 +1,4 @@
-module github.com/sumup/gocat
+module github.com/sumup-oss/gocat
 
 require (
 	github.com/kelseyhightower/envconfig v1.3.0

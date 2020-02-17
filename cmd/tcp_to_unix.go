@@ -25,7 +25,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/sumup-oss/go-pkgs/logger"
 
-	"github.com/sumup/gocat/internal/relay"
+	"github.com/sumup-oss/gocat/internal/relay"
 )
 
 func NewTCPToUnixCmd(logger logger.Logger) *cobra.Command {

@@ -23,7 +23,7 @@ import (
 	"github.com/sumup-oss/go-pkgs/os"
 	"github.com/sumup-oss/go-pkgs/task"
 	"github.com/sumup-oss/go-pkgs/testutils"
-	gocatTesting "github.com/sumup/gocat/internal/testing"
+	gocatTesting "github.com/sumup-oss/gocat/internal/testing"
 	"io/ioutil"
 	"net"
 	stdOs "os"
@@ -46,7 +46,7 @@ func TestMain(m *testing.M) {
 	gocatBinaryPath = testutils.GoBuild(
 		context.Background(),
 		"gocat",
-		"github.com/sumup/gocat",
+		"github.com/sumup-oss/gocat",
 		osExecutor,
 	)
 	runTests := m.Run()

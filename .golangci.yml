@@ -47,7 +47,7 @@ linters-settings:
   lll:
     line-length: 120
   goimports:
-    local-prefixes: github.com/sumup/gocat
+    local-prefixes: github.com/sumup-oss/gocat
   gocritic:
     enabled-tags:
       - performance
