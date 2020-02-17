@@ -1,0 +1,34 @@
+name: Go
+on: 
+  push:
+    branches:
+      - master
+  pull_request:
+    branches: 
+      - master
+jobs:
+  test:
+    name: Test
+    strategy:
+      matrix:
+        golang: ["1.13", "1.12"]
+        os: ["ubuntu-latest", "macos-latest"]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: Set up Go ${{ matrix.golang }}
+      uses: actions/setup-go@v1
+      with:
+        go-version: ${{ matrix.golang }}
+      id: go
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v2
+    
+    - name: Download golangci-lint
+      run: curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.23.2
+
+    - name: Lint
+      run: $(go env GOPATH)/bin/golangci-lint run --timeout=10m
+    
+    - name: Test
+      run: go test -v ./...
