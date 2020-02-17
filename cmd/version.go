@@ -19,7 +19,7 @@ import (
 
 	"github.com/sumup-oss/go-pkgs/os"
 
-	"github.com/sumup/gocat/internal/version"
+	"github.com/sumup-oss/gocat/internal/version"
 
 	"github.com/spf13/cobra"
 )

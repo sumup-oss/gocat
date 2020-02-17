@@ -1,10 +1,5 @@
 run:
   tests: false
-  skip-dirs:
-    # NOTE: Ignore auto-generated files
-    - clients
-    - vendor
-
   # NOTE: Verify `go.{mod,sum}` is up-to-date by attempting to download dependencies
   # if anything is missing
   modules-download-mode: readonly
@@ -45,9 +40,9 @@ linters-settings:
   misspell:
     locale: US
   lll:
-    line-length: 120
+    line-length: 140
   goimports:
-    local-prefixes: github.com/sumup/gocat
+    local-prefixes: github.com/sumup-oss/gocat
   gocritic:
     enabled-tags:
       - performance
@@ -55,6 +50,9 @@ linters-settings:
 linters:
   enable-all: true
   disable:
+    # NOTE: Currently impossible to calculate the optimal order
+    # Can be enabled when https://github.com/mdempsky/maligned/issues/9 is merged.
+    - maligned
     # NOTE: "effective" golang style is full of arguable practices.
     # We don't need that and besides gofmt does the required minimum of style modifications.
     - golint
@@ -62,7 +60,13 @@ linters:
     - unparam
     # NOTE: It's a great linter, but gets in the way too often by not being customizable.
     - gochecknoglobals
-    - depguard
+    # NOTE: It considers too much things as magic numbers.
+    - gomnd
+    # NOTE: False positives.
+    - wsl
+    # NOTE: Pointless.
+    - funlen
+    - godox
     - dupl
 issues:
   exclude-rules:
