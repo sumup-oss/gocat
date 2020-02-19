@@ -35,7 +35,6 @@ jobs:
     - name: Test
       run: go test -v ./...
 
-    
   release:
     name: Release
     runs-on: ubuntu-latest
