@@ -50,7 +50,6 @@ jobs:
     - name: Get Git tag
       id: get_tag
       run: echo ::set-output name=TAG::${GITHUB_REF#refs/tags/}
-      if: startsWith(github.ref, 'refs/tags/')
 
     - name: Build release assets
       run: |
