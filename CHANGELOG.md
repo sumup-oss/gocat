@@ -51,7 +51,7 @@ Change line format:
 
 ## Unreleased (master)
 
-## 0.1.0
+## v0.1.0
 
 ### Added
 

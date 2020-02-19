@@ -47,7 +47,7 @@ jobs:
     - name: Build release assets
       run: |
          $(go env GOPATH)/bin/gox \
-          -output='build/gocat-v${get_tag.outputs.TAG}-{{.OS}}-{{.Arch}}' \
+          -output='build/gocat-${get_tag.outputs.TAG}-{{.OS}}-{{.Arch}}' \
           -arch='amd64' \
           -os='linux darwin' \
           -verbose \
@@ -68,15 +68,16 @@ jobs:
         release_name: ${{ github.ref }}
         draft: false
         prerelease: false
-    
+        body: Changelog at https://github.com/sumup-oss/gocat/blob/master/CHANGELOG.md
+
     # TODO: Replace with glob pattern once `actions/upload-release-asset` supports it
     - uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./build/gocat-v${get_tag.outputs.TAG}-darwin-amd64
-        asset_name: gocat-v${get_tag.outputs.TAG}-darwin-amd64
+        asset_path: ./build/gocat-${get_tag.outputs.TAG}-darwin-amd64
+        asset_name: gocat-${get_tag.outputs.TAG}-darwin-amd64
         asset_content_type: application/octet-stream
       
     # TODO: Replace with glob pattern once `actions/upload-release-asset` supports it
@@ -85,8 +86,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./build/gocat-v${get_tag.outputs.TAG}-linux-amd64
-        asset_name: gocat-v${get_tag.outputs.TAG}-linux-amd64
+        asset_path: ./build/gocat-${get_tag.outputs.TAG}-linux-amd64
+        asset_name: gocat-${get_tag.outputs.TAG}-linux-amd64
         asset_content_type: application/octet-stream
-        body: |
-          Changelog:
