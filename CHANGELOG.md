@@ -51,8 +51,10 @@ Change line format:
 
 ## Unreleased (master)
 
-## 1.0.0
+## 0.1.0
 
 ### Added
 
 * Open-sourced the project
+* Supports TCP-to-Unix relay
+* Supports Unix-to-TCP relay

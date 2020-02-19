@@ -3,7 +3,7 @@
 ## Prerequisites
 
 * **Signed and verified CLA**
-* Golang 1.12.x
+* Golang 1.13.x
 * (To run linter) https://github.com/golangci/golangci-lint in `$PATH`
 
 ## Common commands
@@ -53,3 +53,23 @@ what did you expect to happen, what actually happened.
 1. Make sure that tests and linter(s) pass locally for you.
 1. Submit a PR.
 1. Collaborate with the codeowners/reviewers to merge this in `master`.
+
+### Releasing
+
+#### Rules
+    
+1. Releases are only created from **tags**.
+1. Tags are based on `master`.
+1. `master` is meant to be stable, so before tagging a new release, make sure that the CI checks pass for `master`.
+1. Releases and tags are following *semantic versioning*.
+1. Releases are GitHub releases.
+1. Releases and tags are to be named in pattern of `vX.Y.Z`. 
+  The produced binary artifacts contain the `vX.Y.Z` in their names. 
+  This is due how GitHub's CDNs work. They must be unique regardless if it's a different release.
+1. Changelog must up-to-date with what's going to be released. Check [CHANGELOG](./CHANGELOG.md).
+    
+#### Flow
+
+1. Push a new Git tag in pattern of `vX.Y.Z`.
+1. Wait for GitHub action for `release` to workflow to kick in at https://github.com/sumup-oss/gocat/actions .
+1. If all is good, a new GitHub release will be created and assets will be uploaded there.

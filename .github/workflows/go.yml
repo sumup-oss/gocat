@@ -4,7 +4,7 @@ on:
     branches:
       - master
     tags:
-      - '*'
+      - v*
   pull_request:
     branches: 
       - master
@@ -89,3 +89,5 @@ jobs:
         asset_path: ./build/gocat-v${get_tag.outputs.TAG}-linux-amd64
         asset_name: gocat-v${get_tag.outputs.TAG}-linux-amd64
         asset_content_type: application/octet-stream
+        body: |
+          Changelog:
