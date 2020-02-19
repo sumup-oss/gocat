@@ -17,11 +17,8 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/sumup-oss/go-pkgs/os"
-
-	"github.com/sumup-oss/gocat/internal/version"
-
 	"github.com/spf13/cobra"
+	"github.com/sumup-oss/go-pkgs/os"
 )
 
 func NewVersionCmd(osExecutor os.OsExecutor) *cobra.Command {
@@ -30,7 +27,7 @@ func NewVersionCmd(osExecutor os.OsExecutor) *cobra.Command {
 		Short: "Print the version of gocat",
 		Long:  `Print the version of gocat.`,
 		RunE: func(command *cobra.Command, args []string) error {
-			_, _ = fmt.Fprintln(osExecutor.Stdout(), version.Version)
+			_, _ = fmt.Fprintln(osExecutor.Stdout(), "0.1.0")
 			return nil
 		},
 	}
