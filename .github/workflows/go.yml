@@ -50,7 +50,7 @@ jobs:
     - name: Build release assets
       run: |
          $(go env GOPATH)/bin/gox \
-          -output='build/gocat-${get_tag.outputs.TAG}-{{.OS}}-{{.Arch}}' \
+          -output='build/gocat-${{ get_tag.outputs.TAG }}-{{ .OS }}-{{ .Arch }}' \
           -arch='amd64' \
           -os='linux darwin' \
           -verbose \
@@ -79,8 +79,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./build/gocat-${get_tag.outputs.TAG}-darwin-amd64
-        asset_name: gocat-${get_tag.outputs.TAG}-darwin-amd64
+        asset_path: ./build/gocat-${{ get_tag.outputs.TAG }}-darwin-amd64
+        asset_name: gocat-${{ get_tag.outputs.TAG }}-darwin-amd64
         asset_content_type: application/octet-stream
       
     # TODO: Replace with glob pattern once `actions/upload-release-asset` supports it
@@ -89,6 +89,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./build/gocat-${get_tag.outputs.TAG}-linux-amd64
-        asset_name: gocat-${get_tag.outputs.TAG}-linux-amd64
+        asset_path: ./build/gocat-${{ get_tag.outputs.TAG }}-linux-amd64
+        asset_name: gocat-${{ get_tag.outputs.TAG }}-linux-amd64
         asset_content_type: application/octet-stream
