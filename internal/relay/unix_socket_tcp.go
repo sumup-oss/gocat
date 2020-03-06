@@ -68,17 +68,7 @@ func NewUnixSocketTCP(
 			destinationName:     "TCP connection",
 			destinationAddr:     tcpAddress,
 			dialSourceConn: func(ctx context.Context) (net.Conn, error) {
-				dialer := &net.Dialer{
-					Timeout:       0,
-					Deadline:      time.Time{},
-					LocalAddr:     nil,
-					DualStack:     false,
-					FallbackDelay: 0,
-					KeepAlive:     0,
-					Resolver:      nil,
-					Cancel:        nil,
-					Control:       nil,
-				}
+				dialer := &net.Dialer{}
 				// NOTE: This is a streaming unix domain socket
 				// equivalent of `sock.STREAM`.
 				conn, err := dialer.DialContext(ctx, "unix", unixSocketPath)
