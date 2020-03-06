@@ -31,7 +31,6 @@ type UnixSocketTCP struct {
 }
 
 func NewUnixSocketTCP(
-	ctx context.Context,
 	logger logger.Logger,
 	healthCheckInterval time.Duration,
 	unixSocketPath,
@@ -68,8 +67,18 @@ func NewUnixSocketTCP(
 			sourceName:          "unix socket",
 			destinationName:     "TCP connection",
 			destinationAddr:     tcpAddress,
-			dialSourceConn: func() (net.Conn, error) {
-				dialer := &net.Dialer{}
+			dialSourceConn: func(ctx context.Context) (net.Conn, error) {
+				dialer := &net.Dialer{
+					Timeout:       0,
+					Deadline:      time.Time{},
+					LocalAddr:     nil,
+					DualStack:     false,
+					FallbackDelay: 0,
+					KeepAlive:     0,
+					Resolver:      nil,
+					Cancel:        nil,
+					Control:       nil,
+				}
 				// NOTE: This is a streaming unix domain socket
 				// equivalent of `sock.STREAM`.
 				conn, err := dialer.DialContext(ctx, "unix", unixSocketPath)
@@ -83,8 +92,9 @@ func NewUnixSocketTCP(
 
 				return conn, nil
 			},
-			listenTargetConn: func() (net.Listener, error) {
-				listener, err := net.Listen("tcp", tcpAddress)
+			listenTargetConn: func(ctx context.Context) (net.Listener, error) {
+				var lc net.ListenConfig
+				listener, err := lc.Listen(ctx, "tcp", tcpAddress)
 				if err != nil {
 					return nil, stacktrace.Propagate(
 						err,

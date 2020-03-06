@@ -62,6 +62,7 @@ func TestGocatTCPToUnix(t *testing.T) {
 	payload := "123456"
 	payloadLength := len(payload)
 	dstClient := prepareGocatTCPToUnixTest(ctx, t, payloadLength)
+	defer dstClient.Close()
 
 	var sendBuffer bytes.Buffer
 	_, err := sendBuffer.Write([]byte(payload))
@@ -85,8 +86,6 @@ func TestGocatTCPToUnix(t *testing.T) {
 		receivedPayload,
 		"Different sent compared to received payload",
 	)
-
-	dstClient.Close()
 }
 
 func TestGocatUnixToTCP(t *testing.T) {
@@ -96,6 +95,7 @@ func TestGocatUnixToTCP(t *testing.T) {
 	payload := "123456"
 	payloadLength := len(payload)
 	dstClient := prepareGocatUnixToTCPTest(ctx, t, payloadLength)
+	defer dstClient.Close()
 
 	var sendBuffer bytes.Buffer
 	_, err := sendBuffer.Write([]byte(payload))
@@ -119,8 +119,6 @@ func TestGocatUnixToTCP(t *testing.T) {
 		receivedPayload,
 		"Different sent compared to received payload",
 	)
-
-	dstClient.Close()
 }
 
 func BenchmarkTCPToUnixSequential_Socat(b *testing.B) {
@@ -150,6 +148,9 @@ func BenchmarkTCPToUnixSequential_Socat(b *testing.B) {
 
 		payloadLength := len(testCase.payload)
 		dstClient := prepareSocatTCPToUnixTest(ctx, b, payloadLength)
+		// NOTE: Intentional defer in loop to make sure after tests are run/cancelled it's still called
+		defer dstClient.Close()
+
 		var sendBuffer bytes.Buffer
 		_, err := sendBuffer.Write([]byte(testCase.payload))
 		require.Nil(b, err, "Failed to write testcase payload in buffer")
@@ -212,6 +213,9 @@ func BenchmarkTCPToUnixSequential_Gocat(b *testing.B) {
 
 		payloadLength := len(testCase.payload)
 		dstClient := prepareGocatTCPToUnixTest(ctx, b, payloadLength)
+		// NOTE: Intentional defer in loop to make sure after tests are run/cancelled it's still called
+		defer dstClient.Close()
+
 		var sendBuffer bytes.Buffer
 		_, err := sendBuffer.Write([]byte(testCase.payload))
 		require.Nil(b, err, "Failed to write testcase payload in buffer")
@@ -274,6 +278,9 @@ func BenchmarkTCPToUnixParallel_Gocat(b *testing.B) {
 
 		payloadLength := len(testCase.payload)
 		dstClient := prepareGocatTCPToUnixTest(ctx, b, payloadLength)
+		// NOTE: Intentional defer in loop to make sure after tests are run/cancelled it's still called
+		defer dstClient.Close()
+
 		var sendBuffer bytes.Buffer
 		_, err := sendBuffer.Write([]byte(testCase.payload))
 		require.Nil(
@@ -353,6 +360,9 @@ func BenchmarkTCPToUnixParallel_Socat(b *testing.B) {
 
 		payloadLength := len(testCase.payload)
 		dstClient := prepareSocatTCPToUnixTest(ctx, b, payloadLength)
+		// NOTE: Intentional defer in loop to make sure after tests are run/cancelled it's still called
+		defer dstClient.Close()
+
 		var sendBuffer bytes.Buffer
 		_, err := sendBuffer.Write([]byte(testCase.payload))
 		require.Nil(
@@ -432,6 +442,9 @@ func BenchmarkUnixToTCPSequential_Gocat(b *testing.B) {
 
 		payloadLength := len(testCase.payload)
 		dstClient := prepareGocatUnixToTCPTest(ctx, b, payloadLength)
+		// NOTE: Intentional defer in loop to make sure after tests are run/cancelled it's still called
+		defer dstClient.Close()
+
 		var sendBuffer bytes.Buffer
 		_, err := sendBuffer.Write([]byte(testCase.payload))
 		require.Nil(b, err, "Failed to write testcase payload in buffer")
@@ -494,6 +507,9 @@ func BenchmarkUnixToTCPSequential_Socat(b *testing.B) {
 
 		payloadLength := len(testCase.payload)
 		dstClient := prepareSocatUnixToTCPTest(ctx, b, payloadLength)
+		// NOTE: Intentional defer in loop to make sure after tests are run/cancelled it's still called
+		defer dstClient.Close()
+
 		var sendBuffer bytes.Buffer
 		_, err := sendBuffer.Write([]byte(testCase.payload))
 		require.Nil(b, err, "Failed to write testcase payload in buffer")
@@ -556,6 +572,9 @@ func BenchmarkUnixToTCPParallel_Gocat(b *testing.B) {
 
 		payloadLength := len(testCase.payload)
 		dstClient := prepareGocatUnixToTCPTest(ctx, b, payloadLength)
+		// NOTE: Intentional defer in loop to make sure after tests are run/cancelled it's still called
+		defer dstClient.Close()
+
 		var sendBuffer bytes.Buffer
 		_, err := sendBuffer.Write([]byte(testCase.payload))
 		require.Nil(
@@ -635,6 +654,9 @@ func BenchmarkUnixToTCPParallel_Socat(b *testing.B) {
 
 		payloadLength := len(testCase.payload)
 		dstClient := prepareSocatUnixToTCPTest(ctx, b, payloadLength)
+		// NOTE: Intentional defer in loop to make sure after tests are run/cancelled it's still called
+		defer dstClient.Close()
+
 		var sendBuffer bytes.Buffer
 		_, err := sendBuffer.Write([]byte(testCase.payload))
 		require.Nil(
@@ -736,7 +758,7 @@ func prepareGocatTCPToUnixTest(
 
 	// NOTE: Wait for UNIX server to be brought up by gocat
 	currentRetries := 0
-	clientFn := task.Retry(1*time.Second, func(cancel <-chan struct{}) error {
+	clientFn := task.Retry(1*time.Second, func(ctx context.Context) error {
 		currentRetries += 1
 
 		dstClient, err = gocatTesting.NewUnixClient(dstListenAddress)
@@ -751,7 +773,7 @@ func prepareGocatTCPToUnixTest(
 		return nil
 	})
 
-	err = clientFn(make(chan struct{}))
+	err = clientFn(ctx)
 	require.Nil(t, err)
 
 	return dstClient
@@ -806,7 +828,7 @@ func prepareSocatTCPToUnixTest(
 
 	// NOTE: Wait for UNIX server to be brought up by gocat
 	currentRetries := 0
-	clientFn := task.Retry(1*time.Second, func(cancel <-chan struct{}) error {
+	clientFn := task.Retry(1*time.Second, func(ctx context.Context) error {
 		currentRetries += 1
 
 		dstClient, err = gocatTesting.NewUnixClient(dstListenAddress)
@@ -821,7 +843,7 @@ func prepareSocatTCPToUnixTest(
 		return nil
 	})
 
-	err = clientFn(make(chan struct{}))
+	err = clientFn(ctx)
 	require.Nil(t, err)
 
 	return dstClient
@@ -839,7 +861,7 @@ func prepareSocatUnixToTCPTest(
 	require.Nil(t, err, "Failed to parse and split host from port of address")
 
 	err = l.Close()
-	require.Nil(t, err, "Failed tto close temporary TCP listener")
+	require.Nil(t, err, "Failed to close temporary TCP listener")
 
 	testSrcServer := gocatTesting.NewUnixServer(t, bufferSize)
 	srcServerListenCh := make(chan *gocatTesting.ListenResult, 1)
@@ -879,7 +901,7 @@ func prepareSocatUnixToTCPTest(
 
 	// NOTE: Wait for UNIX server to be brought up by gocat
 	currentRetries := 0
-	clientFn := task.Retry(1*time.Second, func(cancel <-chan struct{}) error {
+	clientFn := task.Retry(1*time.Second, func(ctx context.Context) error {
 		currentRetries += 1
 
 		dstClient, err = gocatTesting.NewTCPClient(dstListenAddress)
@@ -894,7 +916,7 @@ func prepareSocatUnixToTCPTest(
 		return nil
 	})
 
-	err = clientFn(make(chan struct{}))
+	err = clientFn(ctx)
 	require.Nil(t, err)
 
 	return dstClient
@@ -910,8 +932,6 @@ func prepareGocatUnixToTCPTest(
 	l, err := net.Listen("tcp", "127.0.0.1:0")
 	require.Nil(t, err, "Failed to create temporary address")
 	dstListenAddress := l.Addr().String()
-	err = l.Close()
-	require.Nil(t, err, "Failed tto close temporary TCP listener")
 
 	testSrcServer := gocatTesting.NewUnixServer(t, bufferSize)
 	srcServerListenCh := make(chan *gocatTesting.ListenResult, 1)
@@ -921,6 +941,8 @@ func prepareGocatUnixToTCPTest(
 	require.Nil(t, testSrcServerListenResult.Err, "Failed to listen with Unix socket src server")
 
 	go func() {
+		err = l.Close()
+		require.Nil(t, err, "Failed to close temporary TCP listener")
 		stdout, stderr, err := binaryBuild.Run(
 			ctx,
 			"unix-to-tcp",
@@ -943,7 +965,7 @@ func prepareGocatUnixToTCPTest(
 
 	// NOTE: Wait for UNIX server to be brought up by gocat
 	currentRetries := 0
-	clientFn := task.Retry(1*time.Second, func(cancel <-chan struct{}) error {
+	clientFn := task.Retry(1*time.Second, func(ctx context.Context) error {
 		currentRetries += 1
 
 		dstClient, err = gocatTesting.NewTCPClient(dstListenAddress)
@@ -958,7 +980,7 @@ func prepareGocatUnixToTCPTest(
 		return nil
 	})
 
-	err = clientFn(make(chan struct{}))
+	err = clientFn(ctx)
 	require.Nil(t, err)
 
 	return dstClient
