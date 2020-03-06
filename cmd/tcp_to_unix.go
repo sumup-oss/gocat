@@ -49,11 +49,7 @@ func NewTCPToUnixCmd(logger logger.Logger) *cobra.Command {
 				return stacktrace.NewError("blank/empty `dst` specified")
 			}
 
-			ctx, cancelFunc := context.WithCancel(context.Background())
-			defer cancelFunc()
-
 			relayer, err := relay.NewTCPtoUnixSocket(
-				ctx,
 				logger,
 				tcpToUnixHealthCheckInterval,
 				tcpToUnixAddressPath,
@@ -68,6 +64,9 @@ func NewTCPToUnixCmd(logger logger.Logger) *cobra.Command {
 			defer close(osSignalCh)
 
 			signal.Notify(osSignalCh, os.Interrupt, syscall.SIGTERM)
+
+			ctx, cancelFunc := context.WithCancel(context.Background())
+			defer cancelFunc()
 
 			// Ctrl+C handler
 			go func() {

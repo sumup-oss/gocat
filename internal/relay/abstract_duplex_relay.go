@@ -32,12 +32,12 @@ type AbstractDuplexRelay struct {
 	destinationName     string
 	destinationAddr     string
 	bufferSize          int
-	dialSourceConn      func() (net.Conn, error)
-	listenTargetConn    func() (net.Listener, error)
+	dialSourceConn      func(context.Context) (net.Conn, error)
+	listenTargetConn    func(context.Context) (net.Listener, error)
 }
 
 func (r *AbstractDuplexRelay) Relay(ctx context.Context) error {
-	listener, err := r.listenTargetConn()
+	listener, err := r.listenTargetConn(ctx)
 	if err != nil {
 		return stacktrace.Propagate(err, "could bind to %s %s", r.destinationName, r.destinationAddr)
 	}
@@ -50,10 +50,6 @@ func (r *AbstractDuplexRelay) Relay(ctx context.Context) error {
 	}()
 
 	for {
-		if ctx.Err() != nil {
-			return nil
-		}
-
 		conn, err := listener.Accept()
 		if err != nil {
 			// NOTE: Don't print false-positive errors
@@ -65,7 +61,7 @@ func (r *AbstractDuplexRelay) Relay(ctx context.Context) error {
 		}
 
 		r.logger.Infof("Established connection to %s", conn.RemoteAddr())
-		go r.handleConnection(conn)
+		go r.handleConnection(ctx, conn)
 	}
 }
 
@@ -76,7 +72,7 @@ func (r *AbstractDuplexRelay) healthCheckSource(ctx context.Context, listener io
 	defer ticker.Stop()
 
 	// NOTE: Dial source to make sure it's alive
-	conn, err := r.dialSourceConn()
+	conn, err := r.dialSourceConn(ctx)
 	if err != nil {
 		r.logger.Errorf(
 			"Could not dial %s for health check. Error: %s\n",
@@ -93,7 +89,7 @@ func (r *AbstractDuplexRelay) healthCheckSource(ctx context.Context, listener io
 			return
 		case <-ticker.C:
 			// NOTE: Dial source to make sure it's alive
-			conn, err := r.dialSourceConn()
+			conn, err := r.dialSourceConn(ctx)
 			if err != nil {
 				r.logger.Errorf(
 					"Could not dial %s for health check. Error: %s\n",
@@ -109,7 +105,7 @@ func (r *AbstractDuplexRelay) healthCheckSource(ctx context.Context, listener io
 }
 
 // nolint:funlen
-func (r *AbstractDuplexRelay) handleConnection(conn net.Conn) {
+func (r *AbstractDuplexRelay) handleConnection(ctx context.Context, conn net.Conn) {
 	defer func(conn net.Conn) {
 		_ = conn.Close()
 		logger.Infof("Closed connection to %s %s", r.destinationName, conn.RemoteAddr())
@@ -122,7 +118,7 @@ func (r *AbstractDuplexRelay) handleConnection(conn net.Conn) {
 
 	r.logger.Infof("Handling connection from %s %s", r.destinationName, destDeadlineConn.remoteAddress)
 
-	sourceConn, err := r.dialSourceConn()
+	sourceConn, err := r.dialSourceConn(ctx)
 	if err != nil {
 		r.logger.Errorf(
 			"Could not read from source %s. Error: %s",

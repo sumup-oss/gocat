@@ -110,6 +110,8 @@ github.com/stretchr/testify v1.4.0 h1:2E4SXV/wtOkTonXsotYi4li6zVWxYlZuYNCXe9XRJy
 github.com/stretchr/testify v1.4.0/go.mod h1:j7eGeouHqKxXV5pUuKE4zz7dFj8WfuZ+81PSLYec5m4=
 github.com/sumup-oss/go-pkgs v0.0.0-20200214174454-e59ff3dd687c h1:lVhvCeIZWSU5umLmVfUJ+MhNnDC++PPI/6JUTneNe+Q=
 github.com/sumup-oss/go-pkgs v0.0.0-20200214174454-e59ff3dd687c/go.mod h1:H8Ut4TCoM/c8xCxWJ9nd/8O3WKYFcJN/IPrfL9q/PDs=
+github.com/sumup/gocat v0.0.0-20200217165547-82ef4ff1e85e h1:Awr0WyVHsvwQw/1VIqIYVbSPoIi+IPOlu3Yxn8jgwKg=
+github.com/sumup/gocat v0.0.0-20200217165547-82ef4ff1e85e/go.mod h1:T5//xs2yLbYDH7VlY2AU73VyaNkxpQuSrwkOWuph6JQ=
 github.com/tchap/zapext v0.0.0-20180117141735-e61c0c882339 h1:5Njn1a7r5mR51ovnu7TBcmoUffg6DyKzzCoVPZHsU+Q=
 github.com/tchap/zapext v0.0.0-20180117141735-e61c0c882339/go.mod h1:0VgDSQ0xHJRqkxrwu3G2i2762jSnAJMz7rYxiZGpW1U=
 go.uber.org/atomic v1.5.0 h1:OI5t8sDa1Or+q8AeE+yKeB/SDYioSHAgcVljj9JIETY=

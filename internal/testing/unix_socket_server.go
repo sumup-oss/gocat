@@ -50,7 +50,10 @@ func (us *UnixServer) Serve(started chan<- *ListenResult) {
 		return
 	}
 
-	defer ln.Close()
+	defer func() {
+		_ = ln.Close()
+		_ = os.RemoveAll(fd.Name())
+	}()
 
 	addr := ln.Addr().String()
 	if err != nil {
