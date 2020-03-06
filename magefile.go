@@ -21,11 +21,11 @@ import (
 )
 
 func Lint() error {
-	return sh.RunV("golangci-lint", "run")
+	return sh.RunV("golangci-lint", "run", "--timeout=10m")
 }
 
 func Test() error {
-	return sh.RunV("go", "test", ".")
+	return sh.RunV("go", "test", "./...")
 }
 
 func Bench() error {
