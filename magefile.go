@@ -33,9 +33,8 @@ func Bench() error {
 }
 
 func BenchAndGraph() error {
-	// NOTE: Use https://github.com/syndbg/benchgraph for this to work.
-	// TODO: Remove me when https://github.com/miry/benchgraph/pull/1 is merged
-	return sh.Run(
+	// NOTE: Use https://github.com/miry/benchgraph for this to work.
+	return sh.RunV(
 		// HACK: Use a shell to perform the piping.
 		// Perhaps do it in pure Golang if we need to support non-UNIX.
 		"bash",
@@ -45,9 +44,8 @@ func BenchAndGraph() error {
 }
 
 func BenchTCPToUnixAndGraph() error {
-	// NOTE: Use https://github.com/syndbg/benchgraph for this to work.
-	// TODO: Remove me when https://github.com/miry/benchgraph/pull/1 is merged
-	return sh.Run(
+	// NOTE: Use https://github.com/miry/benchgraph for this to work.
+	return sh.RunV(
 		// HACK: Use a shell to perform the piping.
 		// Perhaps do it in pure Golang if we need to support non-UNIX.
 		"bash",
@@ -57,9 +55,8 @@ func BenchTCPToUnixAndGraph() error {
 }
 
 func BenchUnixToTCPAndGraph() error {
-	// NOTE: Use https://github.com/syndbg/benchgraph for this to work.
-	// TODO: Remove me when https://github.com/miry/benchgraph/pull/1 is merged
-	return sh.Run(
+	// NOTE: Use https://github.com/miry/benchgraph for this to work.
+	return sh.RunV(
 		// HACK: Use a shell to perform the piping.
 		// Perhaps do it in pure Golang if we need to support non-UNIX.
 		"bash",

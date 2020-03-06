@@ -736,7 +736,7 @@ func prepareGocatTCPToUnixTest(
 
 	// NOTE: Wait for UNIX server to be brought up by gocat
 	currentRetries := 0
-	clientFn := task.Retry(1*time.Second, func(cancel <-chan struct{}) error {
+	clientFn := task.Retry(1*time.Second, func(ctx context.Context) error {
 		currentRetries += 1
 
 		dstClient, err = gocatTesting.NewUnixClient(dstListenAddress)
@@ -751,7 +751,7 @@ func prepareGocatTCPToUnixTest(
 		return nil
 	})
 
-	err = clientFn(make(chan struct{}))
+	err = clientFn(ctx)
 	require.Nil(t, err)
 
 	return dstClient
@@ -806,7 +806,7 @@ func prepareSocatTCPToUnixTest(
 
 	// NOTE: Wait for UNIX server to be brought up by gocat
 	currentRetries := 0
-	clientFn := task.Retry(1*time.Second, func(cancel <-chan struct{}) error {
+	clientFn := task.Retry(1*time.Second, func(ctx context.Context) error {
 		currentRetries += 1
 
 		dstClient, err = gocatTesting.NewUnixClient(dstListenAddress)
@@ -821,7 +821,7 @@ func prepareSocatTCPToUnixTest(
 		return nil
 	})
 
-	err = clientFn(make(chan struct{}))
+	err = clientFn(ctx)
 	require.Nil(t, err)
 
 	return dstClient
@@ -879,7 +879,7 @@ func prepareSocatUnixToTCPTest(
 
 	// NOTE: Wait for UNIX server to be brought up by gocat
 	currentRetries := 0
-	clientFn := task.Retry(1*time.Second, func(cancel <-chan struct{}) error {
+	clientFn := task.Retry(1*time.Second, func(ctx context.Context) error {
 		currentRetries += 1
 
 		dstClient, err = gocatTesting.NewTCPClient(dstListenAddress)
@@ -894,7 +894,7 @@ func prepareSocatUnixToTCPTest(
 		return nil
 	})
 
-	err = clientFn(make(chan struct{}))
+	err = clientFn(ctx)
 	require.Nil(t, err)
 
 	return dstClient
@@ -943,7 +943,7 @@ func prepareGocatUnixToTCPTest(
 
 	// NOTE: Wait for UNIX server to be brought up by gocat
 	currentRetries := 0
-	clientFn := task.Retry(1*time.Second, func(cancel <-chan struct{}) error {
+	clientFn := task.Retry(1*time.Second, func(ctx context.Context) error {
 		currentRetries += 1
 
 		dstClient, err = gocatTesting.NewTCPClient(dstListenAddress)
@@ -958,7 +958,7 @@ func prepareGocatUnixToTCPTest(
 		return nil
 	})
 
-	err = clientFn(make(chan struct{}))
+	err = clientFn(ctx)
 	require.Nil(t, err)
 
 	return dstClient

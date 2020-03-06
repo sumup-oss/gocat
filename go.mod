@@ -6,7 +6,7 @@ require (
 	github.com/palantir/stacktrace v0.0.0-20161112013806-78658fd2d177
 	github.com/spf13/cobra v0.0.3
 	github.com/stretchr/testify v1.4.0
-	github.com/sumup-oss/go-pkgs v0.0.0-20200214174454-e59ff3dd687c
+	github.com/sumup-oss/go-pkgs v0.0.0-20200306132509-b949afdfe2fe
 	github.com/sumup/gocat v0.0.0-20200217165547-82ef4ff1e85e // indirect
 )
 
