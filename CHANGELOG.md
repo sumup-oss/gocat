@@ -51,6 +51,16 @@ Change line format:
 
 ## Unreleased (master)
 
+## v0.2.0
+
+### Fixed
+
+* Fixed context cancellation, noticeably for health checking ; Ref: https://github.com/sumup-oss/gocat/pull/3
+
+### Changed
+
+* Improved overall performance of `gocat` by building it with Golang 1.14.0. (https://golang.org/doc/go1.14#runtime) ; Ref: https://github.com/sumup-oss/gocat/pull/3
+
 ## v0.1.0
 
 ### Added
