@@ -44,6 +44,7 @@ func NewRootCmd(osExecutor os.OsExecutor, logger logger.Logger) *cobra.Command {
 	cmdInstance.AddCommand(
 		NewFakeCmd(logger),
 		NewTCPToUnixCmd(logger),
+		NewTCPToTCPcmd(logger),
 		NewUnixToTCPCmd(logger),
 		NewVersionCmd(osExecutor),
 	)

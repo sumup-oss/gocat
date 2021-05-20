@@ -13,7 +13,7 @@ jobs:
     name: Test
     strategy:
       matrix:
-        golang: ["1.14"]
+        golang: ["1.16"]
         os: ["ubuntu-latest", "macos-latest"]
     runs-on: ${{ matrix.os }}
     steps:
