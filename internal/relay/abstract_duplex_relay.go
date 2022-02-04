@@ -43,7 +43,8 @@ func (r *AbstractDuplexRelay) Relay(ctx context.Context) error {
 	}
 	defer listener.Close()
 
-	go r.healthCheckSource(ctx, listener)
+	ctx, cancel := context.WithCancel(ctx)
+	go r.healthCheckSource(ctx, cancel)
 	go func() {
 		<-ctx.Done()
 		listener.Close()
@@ -65,8 +66,8 @@ func (r *AbstractDuplexRelay) Relay(ctx context.Context) error {
 	}
 }
 
-func (r *AbstractDuplexRelay) healthCheckSource(ctx context.Context, listener io.Closer) {
-	defer listener.Close()
+func (r *AbstractDuplexRelay) healthCheckSource(ctx context.Context, cancel context.CancelFunc) {
+	defer cancel()
 
 	ticker := time.NewTicker(r.healthCheckInterval)
 	defer ticker.Stop()
