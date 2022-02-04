@@ -51,6 +51,10 @@ Change line format:
 
 ## Unreleased (master)
 
+### Added
+
+* Added `tcp-to-tcp` cmd that relays TCP4/TCP6 to TCP4/TCP6 ; Ref: https://github.com/sumup-oss/gocat/pull/5
+
 ## v0.2.0
 
 ### Fixed
